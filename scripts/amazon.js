@@ -67,7 +67,7 @@ User inputs from forms
 Data from APIs or databases
 Application state
 
-2. Access HTML Elements
+2. Generate the HTML Elements
 JavaScript needs to connect with the webpage:
 
 document.getElementById(), querySelector(), etc.
