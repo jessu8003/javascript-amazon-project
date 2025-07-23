@@ -1,4 +1,5 @@
-import {cart} from "../data/cart.js";
+import {cart,addToCart} from "../data/cart.js";
+import { products} from "../data/products.js";
 let producutsHTML='';
 
 products.forEach((product)=>{
@@ -92,33 +93,24 @@ Interact → How do we make it respond to users?
 The interactive DOM app I created above demonstrates exactly this pattern - it saves user data, accesses HTML elements through various selectors, and makes everything interactive with event handlers and dynamic DOM manipulation.
 This is indeed the core concept that makes JavaScript so powerful for web development - it transforms static HTML pages into dynamic, responsive applications!RetryClaude can make mistakes. Please double-check responses.
 */
+
+function updateCartQuantity(){
+    let cartQuantity=0;
+    cart.forEach((cartItem)=>{
+        cartQuantity+=cartItem.quantity;
+        document.querySelector('.js-cart-quantity').innerHTML=cartQuantity;
+    });
+    
+}
 document.querySelector('.js-products-grid').innerHTML=producutsHTML;
 document.querySelectorAll('.js-add-to-cart')
 .forEach((button)=>{
     button.addEventListener('click',()=>{
         const productId=button.dataset.productId;
-        let matchingItem;
-        cart.forEach((item)=>{
-            if(productId===item.productId){
-                matchingItem=item;
-            }
+    addToCart(productId);
+    updateCartQuantity();
 
-        });
-        if(matchingItem){
-            matchingItem.quantity+=1;
-        }
-        else{
-        cart.push({
-            productId:productId,
-            quantity:1
-        });
-        
-    }
-    let cartQuantity=0;
-    cart.forEach((item)=>{
-        cartQuantity+=item.quantity;
-    });
-    document.querySelector('.js-cart-quantity').innerHTML=cartQuantity;
+    
     
         
     });
