@@ -1,9 +1,10 @@
 import {cart,addToCart} from "../data/cart.js";
 import { products} from "../data/products.js";
-let producutsHTML='';
+import { formatCurrency } from "./utils/money.js";
+let productsHTML='';
 
 products.forEach((product)=>{
-    producutsHTML+=` <div class="product-container">
+    productsHTML+=` <div class="product-container">
                 <div class="product-image-container">
                     <img class="product-image"
                     src="${product.image}">
@@ -22,7 +23,7 @@ products.forEach((product)=>{
                 </div>
 
                 <div class="product-price">
-                    $${(product.priceCents/100).toFixed(2)}
+                    $${formatCurrency(product.priceCents)}
                 </div>
 
                 <div class="product-quantity-container">
@@ -53,7 +54,7 @@ products.forEach((product)=>{
         </div>`;
         
 });
-console.log(producutsHTML);
+console.log(productsHTML);
 /*
 Below javascript code helps us our website to make it interractive
 main idea of javscript is to follow below steps
@@ -102,7 +103,7 @@ function updateCartQuantity(){
     });
     
 }
-document.querySelector('.js-products-grid').innerHTML=producutsHTML;
+document.querySelector('.js-products-grid').innerHTML=productsHTML;
 document.querySelectorAll('.js-add-to-cart')
 .forEach((button)=>{
     button.addEventListener('click',()=>{
