@@ -5,6 +5,7 @@ import {hello} from 'https://unpkg.com/supersimpledev@1.0.1/hello.esm.js';
 import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js';
 import {deliveryOptions,getDeliveryOption} from '../../data/deliveryOptions.js';
 import { renderPaymentSummary } from './paymentSummary.js';
+import {renderCheckoutHeader} from './checkoutHeader.js'
  export function renderOrderSummary(){
         let cartSummaryHTML=''
         cart.forEach((cartItem)=>{
@@ -116,33 +117,39 @@ import { renderPaymentSummary } from './paymentSummary.js';
 
         })
         document.querySelectorAll('.js-update-link')
-        .forEach((link)=>{
-            link.addEventListener('click',()=>{
-                const productId=link.dataset.productId;
-                const container=document.querySelector(`.js-cart-item-container-${productId}`);
-                container.classList.add('is-editing-quantity');
+.forEach((link)=>{
+  link.addEventListener('click',()=>{
+    const productId=link.dataset.productId;
+    const container=document.querySelector(`.js-cart-item-container-${productId}`);
+    
+    // Show the input field by adding the class
+    container.classList.add('is-editing-quantity');
+    
+    // Optionally pre-fill input value
+    const quantityInput = container.querySelector(`.js-quantity-input-${productId}`);
+    const currentQuantity = cart.find(item => item.productId === productId)?.quantity || 1;
+    quantityInput.value = currentQuantity;
+  });
+});
+document.querySelectorAll('.js-save-link')
+.forEach((link)=>{
+  link.addEventListener('click',()=>{
+    const productId = link.dataset.productId;
+    const container = document.querySelector(`.js-cart-item-container-${productId}`);
+    container.classList.remove('is-editing-quantity');
 
+    const quantityInput = document.querySelector(`.js-quantity-input-${productId}`);
+    const newQuantity = Number(quantityInput.value);
 
-            });
-        });
-        document.querySelectorAll('.js-save-link')
-        .forEach((link)=>{
-            link.addEventListener('click',()=>{
-                const productId=link.dataset.productId;
-                const container=document.querySelector(`.js-cart-item-container-${productId}`);
-                container.classList.remove('is-editing-quantity');
-                const quantityInput=document.querySelector(`.js-quantity-input-${productId}`);
-                const newQuantity=Number(quantityInput.value);
-                updateQuantity(productId,newQuantity);
-                const quantityLabel = document.querySelector(
-                    `.js-quantity-label-${productId}`
-                );
-                quantityLabel.innerHTML = newQuantity;
-            
-                updateCartQuantity();
-            });
-            
-        });
+    if (newQuantity > 0) {
+      updateQuantity(productId, newQuantity);
+      renderCheckoutHeader();
+      renderOrderSummary();
+      renderPaymentSummary();
+    }
+  });
+});
+
         function updateCartQuantity(){
         // let cartQuantity=0;
         // cart.forEach((cartItem)=>{
